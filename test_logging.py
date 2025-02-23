@@ -2,7 +2,7 @@ import logging
 
 
 def test_loggingDemo():
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__) #captures the name of file
 
     fileHandler = logging.FileHandler('logfile.log')
     formatter = logging.Formatter("%(asctime)s :%(levelname)s : %(name)s :%(message)s")
