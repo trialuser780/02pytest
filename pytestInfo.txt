@@ -1,0 +1,214 @@
+#To run all the pytest in the created directory python packahe with __init__.py file
+#cd into folder
+
+#Forthis to work we need to have same naming convention
+#We need two spaces between two functions
+#All program name should start with test_program1.py
+#All function should be function definitions folled by name of function being test_trial
+# def test_trial1:
+py.test
+
+#TO get more information of test run we have to give verbose
+#py.test -verbose
+py.test -v
+
+#IN pytest console log will not be shown in output
+# to enable it
+py.test -v -s
+
+def test_firstProgram():
+    msg = "Hello" #operations
+    #assert msg == "Hi", This message will be printed if their is no match
+    assert msg == "Hi", "Test failed because strings do not match"
+
+#To run only that specific file
+py.test test_demo2.py -v -s
+
+#To run specific test cases which are related to credit card related information
+#py.test -k NameOFSpecificTest -v -s
+py.test -k CreditCard -v -s
+
+#TO mark a test a smoke. So all those test cases can be run together later
+#py.test -mark smoke -v -s
+py.test -m smoke -v -s
+
+#to to make sure some test is skipped it can also be marked
+#@pytest.mark.skip
+py.test 
+
+#To run certain test cases but it should not be reported
+#@pytest.mark.xfail
+py.test
+
+#Setting up environmental variable, setting up databases. It is a prerequisite step. the fixture function
+@pytest.fixture()
+def setup():
+  print("I will be executed first")
+
+
+def test_fixtureDmo(setup)
+  print("I will execute steps in fixtureDemo mrthod")
+
+Here when test_fixtureDmo is run it check is setup method had a fixture defined. If so, the setup function will be run first then the test_fixtureDemo function
+run -> test_fixtureDmo(setup) -> setup -> test_fixtureDmo
+
+##############################################################################################
+
+#if we have yield statement in the fixture it will be excuted later onethe calling function steps are executed
+
+@pytest.fixture()
+def setup():
+  print("I will be executed first")
+  yield
+  print("I will executed last") #here it is used to close the browser and close the cookies
+
+def test_fixtureDmo(setup)
+  print("I will execute steps in fixtureDemo mrthod")
+
+################################################################################################################
+#If certain fixture code is needed in all the file. It is good to be declared once. Opening the browser.
+#it is also usedto load the data. So it can used by other functions
+
+#it is by default named as conftest.py -> used when the fixture is ahred by multiple files
+@pytest.fixture()
+def setup():
+  print("I will be executed first")
+  yield
+  print("I will executed last") #here it is used to close the browser and close the cookies
+
+#It is a new python file.
+import pytest
+@pytest.mark.smoke
+def test_firstProgram(setup):
+    print("Hello")
+
+###################
+#In order for all the test code to have fixture applied. Declare qat the class level, so it is available to all functions of the class.
+
+#it is by default named as conftest.py -> used when the fixture is ahred by multiple files
+@pytest.fixture()
+def setup():
+  print("I will be executed first")
+  yield
+  print("I will executed last") #here it is used to close the browser and close the cookies
+
+
+import pytest
+
+
+@pytest.mark.usefixtures("setup")
+class TestExample:
+
+    def test_fixtureDemo(self):
+        print("i will execute steps in fixtureDemo method")
+
+    def test_fixtureDemo1(self):
+        print("i will execute steps in fixtureDemo1 method")
+
+    def test_fixtureDemo2(self):
+        print("i will execute steps in fixtureDemo2 method")
+
+    def test_fixtureDemo3(self):
+        print("i will execute steps in fixtureDemo3 method")
+
+###################################################################################################################### 
+py.test test_fixturesDemo.py -v -s
+#####################################TO run above code##########################################################
+#########################################################################################################
+
+#To run only once at the class level in test of repeating at each function. We have to useclass level . Generally used for clearing cache when browser is loaded.
+
+#it is by default named as conftest.py -> used when the fixture is ahred by multiple files
+@pytest.fixture(scope="class")
+def setup():
+    print("I will be executing first")
+    yield
+    print(" I will execute last")
+
+import pytest
+
+
+@pytest.mark.usefixtures("setup")
+class TestExample:
+
+    def test_fixtureDemo(self):
+        print("i will execute steps in fixtureDemo method")
+
+    def test_fixtureDemo1(self):
+        print("i will execute steps in fixtureDemo1 method")
+
+    def test_fixtureDemo2(self):
+        print("i will execute steps in fixtureDemo2 method")
+
+    def test_fixtureDemo3(self):
+        print("i will execute steps in fixtureDemo3 method")
+
+###############################################################################################################################
+#################################################################################################################################
+
+#Fixtures can be used to load data. Here the example is for testing login page of a website.
+conftest.py should have this function
+
+#here we can call datload function inside the test file test_fixturesData.py
+#When you are returning something the fixture name should be passed for test function within the class
+@pytest.fixture()
+def dataLoad():
+    print("user profile data is being created")
+    return ["Rahul","Shetty","rahulshettyacademy.com"]
+
+import pytest
+
+from pytestsDemo.BaseClass import BaseClass
+
+
+@pytest.mark.usefixtures("dataLoad")
+class TestExample2(BaseClass):
+
+    def test_editProfile(self, dataLoad):
+        log = self.getLogger()
+        log.info(dataLoad[0])
+        log.info(dataLoad[2])
+        print(dataLoad[2])
+
+###############################################################################################################################
+################################################################################################################################
+#To run tests in multiple browsers. Example for paramterization
+#conftest.py should have this function
+
+@pytest.fixture(params=["chrome","Firefox",IE"])
+def crossBrowser(request):
+    return request.param
+
+#in test_demo1.py #Here the below function will be run 3 times with different parma passed
+def test_crossBrowser(crossBrowser):
+    print(crossBrowser[1])
+
+
+#to send multiple valus in one sigle run. #conftest.py should have this function. We have to declare in another class and callit. It should not be written here
+@pytest.fixture(params=[("chrome","Rahul","shetty"), ("Firefox","shetty"), ("IE","SS")])
+def crossBrowser(request):
+    return request.param
+
+
+##############################################################################################################################
+#To see html report
+pip install pytest-html
+
+#to create html report
+py.test --html=report.html -s
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

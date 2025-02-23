@@ -20,6 +20,7 @@ import pytest
 #@pytest.mark.skip
 def test_firstProgram():
     msg = "Hello" #operations
+    #assert msg == "Hi", This message will be printed if their is no match "Test failed because strings do not match"
     assert msg == "Hi", "Test failed because strings do not match"
 
 
